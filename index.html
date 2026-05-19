@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="description" content="Modern CGPA Calculator for students">
+<meta name="keywords" content="CGPA Calculator, GPA Calculator, Student Tool">
+<meta name="author" content="Hridyansh Chaudhary">
+<title>Modern CGPA Calculator</title>
+
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+    html{
+    scroll-behavior:smooth;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+:root{
+    --primary:#4f46e5;
+    --secondary:#7c3aed;
+    --light:#eef2ff;
+    --dark:#0f172a;
+    --text:#475569;
+    --white:#ffffff;
+}
+
+body{
+    font-family:'Poppins',sans-serif;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+    background:
+    radial-gradient(circle at top left,#7c3aed 0%,transparent 35%),
+    radial-gradient(circle at bottom right,#2563eb 0%,transparent 35%),
+    linear-gradient(135deg,#0f172a,#111827,#1e293b);
+    padding:20px;
+    position:relative;
+    overflow-x:hidden;
+}
+
+/* Floating Glow Circles */
+
+body::before,
+body::after{
+    content:"";
+    position:absolute;
+    border-radius:50%;
+    filter:blur(80px);
+    opacity:0.45;
+    z-index:0;
+}
+
+body::before{
+    width:300px;
+    height:300px;
+    background:#8b5cf6;
+    top:-80px;
+    left:-60px;
+}
+
+body::after{
+    width:280px;
+    height:280px;
+    background:#3b82f6;
+    bottom:-80px;
+    right:-60px;
+}
+
+.container{
+    position:relative;
+    z-index:1;
+    width:min(520px,100%);
+    padding:42px 35px;
+    border-radius:30px;
+
+    background:rgba(255,255,255,0.12);
+    backdrop-filter:blur(18px);
+
+    border:1px solid rgba(255,255,255,0.18);
+
+    box-shadow:
+    0 25px 60px rgba(0,0,0,0.35),
+    inset 0 1px 1px rgba(255,255,255,0.15);
+
+    animation:fadeIn 1s ease;
+}
+
+@keyframes fadeIn{
+    from{
+        opacity:0;
+        transform:translateY(20px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+.badge{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:rgba(255,255,255,0.15);
+    color:#fff;
+    padding:8px 16px;
+    border-radius:50px;
+    font-size:0.9rem;
+    font-weight:500;
+    margin-bottom:24px;
+    border:1px solid rgba(255,255,255,0.18);
+}
+
+.badge::before{
+    content:"✨";
+}
+
+.hero h1{
+    color:white;
+    font-size:3rem;
+    line-height:1.1;
+    margin-bottom:18px;
+    font-weight:700;
+}
+
+.hero p{
+    color:rgba(255,255,255,0.8);
+    line-height:1.9;
+    font-size:1rem;
+    margin-bottom:30px;
+}
+
+.button-wrap{
+    margin-top:10px;
+}
+
+button{
+    width:100%;
+    border:none;
+    outline:none;
+    padding:16px;
+    border-radius:18px;
+    font-size:1rem;
+    font-weight:600;
+    cursor:pointer;
+    color:white;
+
+    background:linear-gradient(
+    135deg,
+    var(--primary),
+    var(--secondary)
+    );
+
+    transition:0.3s ease;
+
+    box-shadow:
+    0 15px 30px rgba(99,102,241,0.35);
+}
+
+button:hover{
+    transform:translateY(-3px) scale(1.02);
+
+    box-shadow:
+    0 20px 40px rgba(99,102,241,0.5);
+}
+
+button:active{
+    transform:scale(0.98);
+}
+
+.footer{
+    margin-top:28px;
+    color:rgba(255,255,255,0.7);
+    font-size:0.9rem;
+    line-height:1.8;
+    text-align:center;
+}
+
+/* Small Floating Cards */
+
+.floating{
+    position:absolute;
+    background:rgba(255,255,255,0.12);
+    border:1px solid rgba(255,255,255,0.12);
+    backdrop-filter:blur(10px);
+    color:white;
+    padding:12px 16px;
+    border-radius:16px;
+    font-size:0.9rem;
+    animation:float 4s ease-in-out infinite;
+}
+
+.float1{
+    top:-18px;
+    right:-18px;
+}
+
+.float2{
+    bottom:-18px;
+    left:-18px;
+    animation-delay:2s;
+}
+
+@keyframes float{
+    0%,100%{
+        transform:translateY(0);
+    }
+    50%{
+        transform:translateY(-10px);
+    }
+}
+
+@media(max-width:600px){
+
+    .container{
+        padding:32px 24px;
+    }
+
+    .hero h1{
+        font-size:2.2rem;
+    }
+
+    .hero p{
+        font-size:0.95rem;
+    }
+
+    .floating{
+        display:none;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="floating float1">📘 GPA</div>
+    <div class="floating float2">🎓 Results</div>
+
+    <div class="hero">
+
+        <div class="badge">
+            Smart Academic Tool
+        </div>
+
+        <h1>CGPA Calculator</h1>
+
+        <p>
+            Calculate your CGPA instantly with a modern and elegant interface.
+            Track semester performance, estimate academic scores, and plan your goals easily.
+        </p>
+
+    </div>
+
+    <div class="button-wrap">
+
+        <button onclick="window.location.href='calculator.html'">
+             Start Calculating
+        </button>
+
+    </div>
+
+    <div class="footer">
+        Made for students to simplify academic performance tracking with style ✨
+    </div>
+
+</div>
+
+</body>
+</html>

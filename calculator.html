@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modern CGPA Calculator</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Poppins',sans-serif;
+    min-height:100vh;
+    padding:30px 15px;
+    background:
+    linear-gradient(135deg,#4f46e5,#7c3aed,#2563eb);
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.container{
+    width:min(950px,100%);
+    background:rgba(255,255,255,0.12);
+    backdrop-filter:blur(18px);
+
+    border:1px solid rgba(255,255,255,0.18);
+
+    border-radius:28px;
+
+    padding:35px;
+
+    box-shadow:
+    0 20px 60px rgba(0,0,0,0.25);
+}
+
+.header{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.header h1{
+    color:white;
+    font-size:3rem;
+    margin-bottom:10px;
+}
+
+.header p{
+    color:rgba(255,255,255,0.8);
+    line-height:1.7;
+}
+
+.badge{
+    display:inline-block;
+    padding:8px 18px;
+    border-radius:50px;
+    background:rgba(255,255,255,0.15);
+    color:white;
+    margin-bottom:18px;
+    font-size:0.9rem;
+    border:1px solid rgba(255,255,255,0.2);
+}
+
+/* TABLE */
+
+.table-wrapper{
+    overflow-x:auto;
+    border-radius:20px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    overflow:hidden;
+    border-radius:20px;
+}
+
+th{
+    background:rgba(255,255,255,0.15);
+    color:white;
+    padding:16px;
+    text-align:left;
+    font-weight:600;
+    font-size:1rem;
+}
+
+td{
+    padding:14px;
+    background:rgba(255,255,255,0.06);
+    border-top:1px solid rgba(255,255,255,0.08);
+}
+
+tr:hover td{
+    background:rgba(255,255,255,0.10);
+}
+
+/* INPUTS */
+
+input,
+select{
+    width:100%;
+    padding:12px;
+    border:none;
+    outline:none;
+    border-radius:12px;
+
+    background:rgba(255,255,255,0.12);
+
+    color:white;
+    font-size:0.95rem;
+
+    border:1px solid rgba(255,255,255,0.12);
+}
+
+input::placeholder{
+    color:rgba(255,255,255,0.65);
+}
+
+select option{
+    color:black;
+}
+
+/* BUTTONS */
+
+.controls{
+    margin-top:28px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:15px;
+}
+
+button{
+    flex:1;
+    min-width:180px;
+
+    border:none;
+    outline:none;
+    padding:15px;
+
+    border-radius:16px;
+
+    font-size:1rem;
+    font-weight:600;
+
+    cursor:pointer;
+    transition:0.3s ease;
+
+    color:white;
+}
+
+.add-btn{
+    background:linear-gradient(135deg,#06b6d4,#3b82f6);
+}
+
+.calc-btn{
+    background:linear-gradient(135deg,#10b981,#059669);
+}
+
+.clear-btn{
+    background:linear-gradient(135deg,#ef4444,#dc2626);
+}
+
+.remove{
+    background:linear-gradient(135deg,#f43f5e,#e11d48);
+    width:100%;
+}
+
+button:hover{
+    transform:translateY(-3px) scale(1.02);
+    box-shadow:0 12px 24px rgba(0,0,0,0.2);
+}
+
+/* RESULT */
+
+.result{
+    margin-top:30px;
+    padding:25px;
+
+    border-radius:22px;
+
+    background:rgba(255,255,255,0.10);
+
+    border:1px solid rgba(255,255,255,0.15);
+
+    color:white;
+
+    text-align:center;
+
+    display:none;
+}
+
+.result.show{
+    display:block;
+    animation:fadeIn 0.5s ease;
+}
+
+.result h2{
+    font-size:2.2rem;
+    margin-bottom:10px;
+}
+
+.result p{
+    color:rgba(255,255,255,0.8);
+    margin-top:6px;
+}
+
+@keyframes fadeIn{
+    from{
+        opacity:0;
+        transform:translateY(15px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+.footer{
+    margin-top:30px;
+    text-align:center;
+    color:rgba(255,255,255,0.7);
+    font-size:0.92rem;
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+    .header h1{
+        font-size:2.2rem;
+    }
+
+    .controls{
+        flex-direction:column;
+    }
+
+    button{
+        width:100%;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+
+        <div class="badge">
+            🎓 Smart Academic Tool
+        </div>
+
+        <h1>CGPA Calculator</h1>
+
+        <p>
+            Easily calculate your CGPA with a modern and beautiful interface.
+            Add subjects, select grades, and track your academic performance instantly.
+        </p>
+
+    </div>
+
+    <div class="table-wrapper">
+
+        <table id="subjects">
+
+<thead>
+    <tr>
+        <th>📘 Subject</th>
+        <th>📝 Marks</th>
+        <th>🏆 Grade</th>
+        <th>📊 Credits</th>
+        <th>⚡ Action</th>
+    </tr>
+</thead>
+
+            <tbody>
+
+                <tr>
+
+    <td>
+        <input type="text"
+               class="name"
+               placeholder="Enter subject">
+    </td>
+
+    <td>
+        <input type="number"
+               class="marks"
+               min="0"
+               max="100"
+               placeholder="Enter marks"
+               oninput="setGrade(this)">
+    </td>
+
+    <td>
+
+        <select class="grade" disabled data-point="">
+
+            <option value="">Enter marks</option>
+
+            <option value="10">O (90 - 100)</option>
+
+            <option value="9">A+ (80 - 89)</option>
+
+            <option value="8">A (70 - 79)</option>
+
+            <option value="7">B+ (60 - 69)</option>
+
+            <option value="6">B (50 - 59)</option>
+
+            <option value="5">C (40 - 49)</option>
+
+            <option value="4">P (35 - 39)</option>
+
+            <option value="0">F (Below 35)</option>
+
+            <option value="0">Ab (Absent)</option>
+
+        </select>
+
+    </td>
+
+    <td>
+        <input type="number"
+               class="credit"
+               min="0"
+               step="0.5"
+               value="3">
+    </td>
+
+    <td>
+        <button class="remove"
+                onclick="removeRow(this)">
+            Remove
+        </button>
+    </td>
+
+</tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <div class="controls">
+
+        <button class="add-btn" onclick="addRow()">
+            ➕ Add Subject
+        </button>
+
+        <button class="calc-btn" onclick="calculateCGPA()">
+            🚀 Calculate CGPA
+        </button>
+
+        <button class="clear-btn" onclick="clearAll()">
+            🗑 Clear All
+        </button>
+
+    </div>
+
+    <div class="result" id="result"></div>
+
+    <div class="footer">
+        Designed with ❤️ for students
+    </div>
+
+</div>
+
+<script>
+
+function addRow(){
+
+    const tbody=document.querySelector('#subjects tbody');
+
+    const tr=document.createElement('tr');
+
+    tr.innerHTML=`
+
+        <td>
+            <input type="text"
+                   class="name"
+                   placeholder="Enter subject">
+        </td>
+
+        <td>
+            <input type="number"
+                   class="marks"
+                   min="0"
+                   max="100"
+                   placeholder="Enter marks"
+                   oninput="setGrade(this)">
+        </td>
+
+        <td>
+
+            <select class="grade" disabled data-point="">
+
+                <option value="">Enter marks</option>
+
+                <option value="10">O (90 - 100)</option>
+
+                <option value="9">A+ (80 - 89)</option>
+
+                <option value="8">A (70 - 79)</option>
+
+                <option value="7">B+ (60 - 69)</option>
+
+                <option value="6">B (50 - 59)</option>
+
+                <option value="5">C (40 - 49)</option>
+
+                <option value="4">P (35 - 39)</option>
+
+                <option value="0">F (Below 35)</option>
+
+                <option value="0">Ab (Absent)</option>
+
+            </select>
+
+        </td>
+
+        <td>
+            <input type="number"
+                   class="credit"
+                   min="0"
+                   step="0.5"
+                   value="3">
+        </td>
+
+        <td>
+            <button class="remove"
+                    onclick="removeRow(this)">
+                Remove
+            </button>
+        </td>
+
+    `;
+
+    tbody.appendChild(tr);
+}
+
+function removeRow(btn){
+
+    const totalRows=document.querySelectorAll('#subjects tbody tr').length;
+
+    if(totalRows>1){
+        btn.closest('tr').remove();
+    }
+    else{
+        alert("At least one subject is required.");
+    }
+}
+
+function setGrade(input){
+
+    const marks = parseFloat(input.value);
+
+    const row = input.closest('tr');
+
+    const gradeSelect = row.querySelector('.grade');
+
+    if(input.value === '' || Number.isNaN(marks) || marks < 0 || marks > 100){
+
+        gradeSelect.innerHTML = `<option value="">Enter marks</option>`;
+
+        gradeSelect.dataset.point = "";
+
+        return;
+    }
+
+    let gradeText = "";
+    let gradePoint = 0;
+
+    if(marks >= 90){
+
+        gradeText = "O (90 - 100)";
+        gradePoint = 10;
+
+    }
+    else if(marks >= 80){
+
+        gradeText = "A+ (80 - 89)";
+        gradePoint = 9;
+
+    }
+    else if(marks >= 70){
+
+        gradeText = "A (70 - 79)";
+        gradePoint = 8;
+
+    }
+    else if(marks >= 60){
+
+        gradeText = "B+ (60 - 69)";
+        gradePoint = 7;
+
+    }
+    else if(marks >= 50){
+
+        gradeText = "B (50 - 59)";
+        gradePoint = 6;
+
+    }
+    else if(marks >= 40){
+
+        gradeText = "C (40 - 49)";
+        gradePoint = 5;
+
+    }
+    else if(marks >= 35){
+
+        gradeText = "P (35 - 39)";
+        gradePoint = 4;
+
+    }
+    else{
+
+        gradeText = "F (Below 35)";
+        gradePoint = 0;
+
+    }
+
+    gradeSelect.innerHTML = `<option value="${gradePoint}">${gradeText}</option>`;
+
+    gradeSelect.dataset.point = gradePoint;
+}
+
+function calculateCGPA(){
+
+    const rows=document.querySelectorAll('#subjects tbody tr');
+
+    let totalPoints=0;
+    let totalCredits=0;
+    let hasInvalidMarks=false;
+
+    rows.forEach(row=>{
+
+        const gradeSelect = row.querySelector('.grade');
+
+        const grade=parseFloat(
+            gradeSelect.dataset.point || gradeSelect.value
+        ) || 0;
+
+        const credit=parseFloat(
+            row.querySelector('.credit').value
+        ) || 0;
+
+        if(gradeSelect.dataset.point === ""){
+            hasInvalidMarks = true;
+        }
+
+        totalPoints += grade * credit;
+        totalCredits += credit;
+    });
+
+    const result=document.getElementById('result');
+
+    if(hasInvalidMarks){
+
+        result.innerHTML=`
+            <h2>⚠ Invalid Marks</h2>
+            <p>Please enter marks between 0 and 100 for every subject.</p>
+        `;
+
+        result.classList.add('show');
+
+        return;
+    }
+
+    if(totalCredits===0){
+
+        result.innerHTML=`
+            <h2>⚠ Invalid Credits</h2>
+            <p>Total credits cannot be zero.</p>
+        `;
+
+        result.classList.add('show');
+
+        return;
+    }
+
+    const cgpa=(totalPoints/totalCredits).toFixed(2);
+    const message=getPerformanceMessage(parseFloat(cgpa));
+
+    result.innerHTML=`
+
+        <h2>🎉 Your CGPA: ${cgpa}</h2>
+
+        <p>Total Credits : <strong>${totalCredits}</strong></p>
+
+        <p>${message}</p>
+
+    `;
+
+    result.classList.add('show');
+}
+
+function getPerformanceMessage(cgpa){
+
+    if(cgpa >= 9){
+        return "Excellent performance! Congratulations, keep shining.";
+    }
+    else if(cgpa >= 8){
+        return "Great work! You are doing very well.";
+    }
+    else if(cgpa >= 7){
+        return "Good job! Keep practicing to improve even more.";
+    }
+    else if(cgpa >= 6){
+        return "Nice effort! Focus on weak subjects and you can score higher.";
+    }
+    else if(cgpa >= 5){
+        return "You passed, but there is room for improvement. Keep working hard.";
+    }
+    else{
+        return "Do not give up. Revise regularly and aim for a better result next time.";
+    }
+}
+
+function clearAll(){
+
+    const tbody=document.querySelector('#subjects tbody');
+
+    tbody.innerHTML='';
+
+    addRow();
+
+    const result=document.getElementById('result');
+
+    result.innerHTML='';
+
+    result.classList.remove('show');
+}
+
+</script>
+
+</body>
+</html>
